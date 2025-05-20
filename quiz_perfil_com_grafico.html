@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz de Perfil</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Quiz de Perfil – Qual é o seu estilo?</h1>
+
+    <form id="quizForm">
+        <h3>1. Como você lida com problemas técnicos?</h3>
+        <label><input type="radio" name="q1" value="A"> A) Com lógica e análise</label><br>
+        <label><input type="radio" name="q1" value="B"> B) Consultando colegas</label><br>
+        <label><input type="radio" name="q1" value="C"> C) Testando na prática</label><br>
+
+        <h3>2. Como você trabalha em equipe?</h3>
+        <label><input type="radio" name="q2" value="A"> A) Organizando tarefas e prazos</label><br>
+        <label><input type="radio" name="q2" value="B"> B) Dialogando e ouvindo opiniões</label><br>
+        <label><input type="radio" name="q2" value="C"> C) Executando e ajustando ao longo do caminho</label><br>
+
+        <h3>3. Como você aprende melhor?</h3>
+        <label><input type="radio" name="q3" value="A"> A) Lendo e estudando</label><br>
+        <label><input type="radio" name="q3" value="B"> B) Com colegas e dinâmicas</label><br>
+        <label><input type="radio" name="q3" value="C"> C) Fazendo e praticando</label><br>
+
+        <br><button type="button" onclick="verResultado()">Ver Resultado</button>
+    </form>
+
+    <h2 id="feedback"></h2>
+    <canvas id="grafico" width="400" height="200"></canvas>
+
+    <script>
+        function verResultado() {
+            let contagem = { A: 0, B: 0, C: 0 };
+            for (let i = 1; i <= 3; i++) {
+                let resposta = document.querySelector('input[name="q' + i + '"]:checked');
+                if (resposta) contagem[resposta.value]++;
+            }
+
+            let maior = Object.keys(contagem).reduce((a, b) => contagem[a] > contagem[b] ? a : b);
+            let perfil = {
+                A: "Perfil Analítico – você é lógico e estratégico.",
+                B: "Perfil Colaborativo – você valoriza o trabalho em grupo.",
+                C: "Perfil Prático – você aprende com a ação."
+            };
+
+            document.getElementById("feedback").innerText = perfil[maior];
+
+            const ctx = document.getElementById('grafico').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['A', 'B', 'C'],
+                    datasets: [{
+                        label: 'Pontuação por perfil',
+                        data: [contagem.A, contagem.B, contagem.C],
+                        backgroundColor: ['#0074D9', '#2ECC40', '#FF851B']
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
